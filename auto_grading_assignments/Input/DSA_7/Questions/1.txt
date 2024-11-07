@@ -1,0 +1,10 @@
+------------------------DESCRIPTION----------------
+Question: `Write a function to solve n_queens problems.`
+
+
+
+--Constrains Start--
+- The Function should be named 'solution'.
+- The Function should take an integer `n` as input, representing the number of queens.
+- The Function should output a list of lists, where each inner list represents a valid configuration of queens on an `n x n` chessboard. Each element in the inner list represents the column index of the queen in that row.
+--Constrains End--

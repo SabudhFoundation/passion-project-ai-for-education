@@ -1,0 +1,10 @@
+------------------------DESCRIPTION----------------
+Question: `Write a python function to do BFS.`
+
+
+
+--Constrains Start--
+- The Function should be named 'solution'
+- The Function should take a graph (as a dictionary) and a starting node (as a string) as input.
+- The Function should output a list of nodes in the order they were visited in BFS.
+--Constrains End--

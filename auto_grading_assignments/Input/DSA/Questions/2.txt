@@ -1,0 +1,10 @@
+------------------------DESCRIPTION----------------
+Question: `Write Best First Search Function. Along with constraints, give me the solution template`
+
+
+
+--Constraints Start--
+- The Function should be named 'solution'
+- The Function should take 'graph (dict), start (str), goal (str)' as input.
+- The Function should output a list of nodes representing the path from start to goal.
+--Constraints End--

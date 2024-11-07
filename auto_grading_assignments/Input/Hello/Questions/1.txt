@@ -1,0 +1,10 @@
+------------------------DESCRIPTION----------------
+Question: `Write a python function for selecting unique elements of an array and return them as a list.`
+
+
+
+--Constrains Start--
+- The Function should be named 'solution'
+- The Function should take a single list as input.
+- The Function should output a list of unique elements.
+--Constrains End--

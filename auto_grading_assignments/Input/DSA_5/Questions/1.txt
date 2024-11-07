@@ -1,0 +1,12 @@
+------------------------DESCRIPTION----------------
+Question: `Write a class to implement LRU Cache with put and get methods.`
+
+
+
+--Constrains Start--
+- The class should be named `LRUCache`.
+- The class should have methods `put(key: int, value: int)` and `get(key: int) -> int`.
+- The constructor should take an integer `capacity` as input.
+- The `get` method should return the value associated with the key if it exists, otherwise return -1.
+- The `put` method should add a key-value pair to the cache, evicting the least recently used item if the cache exceeds its capacity.
+--Constrains End--

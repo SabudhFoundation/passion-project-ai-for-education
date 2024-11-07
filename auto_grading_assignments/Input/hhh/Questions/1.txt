@@ -1,0 +1,10 @@
+------------------------DESCRIPTION----------------
+Question: `Write DFS Function`
+
+
+
+--Constrains Start--
+- The Function should be named 'solution'
+- The Function should take 'a graph represented as a dictionary and a starting node as input'.
+- The Function should output a list of nodes in the order they were visited in a DFS traversal.
+--Constrains End--

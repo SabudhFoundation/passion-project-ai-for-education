@@ -1,0 +1,10 @@
+------------------------DESCRIPTION----------------
+Question: `Write a Python class for LRU Cache.`
+
+
+
+--Constrains Start--
+- The Function should be named 'solution'
+- The Function should take 'capacity' as input.
+- The Function should output in such a way that it allows the use of 'put' and 'get' methods for the LRU Cache.
+--Constrains End--

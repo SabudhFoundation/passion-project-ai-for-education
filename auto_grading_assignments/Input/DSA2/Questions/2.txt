@@ -1,0 +1,10 @@
+------------------------DESCRIPTION----------------
+Question: `Write a function to do Best first Search.`
+
+
+
+--Constrains Start--
+- The Function should be named 'solution'
+- The Function should take 'graph (dict), start (str), goal (str)' as input.
+- The Function should output a list of nodes representing the path from start to goal, or None if no path exists.
+--Constrains End--
