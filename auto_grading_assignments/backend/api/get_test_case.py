@@ -42,7 +42,8 @@ class ASK_GPT4:
                             - The Function should take '#necessary parameters here#' as input.
                             - The Function should ouput in such a way \n#Output Layout here#
                             --Constrains End--
-                            IMPORTANT: The test cases should test the functionality of all the concepts that are related to topic of the question"""),
+                            IMPORTANT: The test cases should test the functionality of all the concepts that are related to topic of the question
+                            I am keeping these cases in a seperate python file hence make sure you also implement the Data Structure Classes WITHIN THE test_solution FUNCTION neccessary for running these test cases """),
             ],
             temperature=0.1,
             max_tokens=2000,

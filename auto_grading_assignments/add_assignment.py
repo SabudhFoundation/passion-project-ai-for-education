@@ -22,6 +22,7 @@ def generate_description(test_case_maker, question, subject):
     return test_case_maker.get_test_cases(question, subject)
 
 def write_description(description, dir, file_name, write_json=True):
+    description = re.sub(r'\r\n', r'\n', description)
     Make_Files.make_question(description=description, directory=dir, file_name=file_name)
 
     if not write_json:
