@@ -1,10 +1,10 @@
 ------------------------DESCRIPTION----------------
-Question: `Write A* Search Algorithm Function. Along with constraints, give me the solution template`
-
-
-
---Constraints Start--
-- The Function should be named 'solution'
-- The Function should take 'start', 'goal', and 'grid' as input parameters.
-- The Function should output a list of tuples representing the path from start to goal, or an empty list if no path exists.
---Constraints End--
+Question: `Write a Python function to BFS on a graph.`
+
+
+
+--Constrains Start--
+- The Function should be named 'solution'.
+- The Function should take a graph represented as an adjacency list (dictionary) and a starting node as input.
+- The Function should output a list of nodes in the order they were visited during the BFS traversal.
+--Constrains End--

@@ -1,6 +1,7 @@
 from azure.ai.inference import ChatCompletionsClient
 from azure.ai.inference.models import SystemMessage, UserMessage
 from azure.core.credentials import AzureKeyCredential
+import re
 
 class ASK_GPT4:
     def __init__(self, secret_key, endpoint, model_name):

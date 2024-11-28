@@ -1,4 +1,4 @@
-import logging
+import logging, re
 
 def setup_logger():
     logger = logging.getLogger('grading_logger')

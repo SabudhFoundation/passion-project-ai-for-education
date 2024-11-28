@@ -1,1 +1,0 @@
-Write a function to find max depth of a Binary Search tree

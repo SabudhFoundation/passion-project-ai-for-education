@@ -18,6 +18,7 @@ class Make_Files:
     @classmethod
     def extract_test_case(cls, description):
         # Pattern to extract test cases
+        description = re.sub()
         test_case_pattern = r'--Test Cases Start--\s*.*\s*(def.*?)\s*`{0,3}\s*--Test Cases End--'
         # Extract test cases
         test_cases_match = re.search(test_case_pattern, description, re.DOTALL)

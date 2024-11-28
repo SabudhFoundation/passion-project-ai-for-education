@@ -6,6 +6,7 @@ from database.DataBase import Connect_DB
 import pathlib
 import sys
 import json, os, logging
+import re
 
 
 # Create a logger for grading
