@@ -1,0 +1,102 @@
+[
+    {
+        "question": "What is the process of converting documents into a tabular representation called?",
+        "choices": [
+            "Vectorization",
+            "Normalization",
+            "Tokenization",
+            "Classification"
+        ],
+        "answer": 1
+    },
+    {
+        "question": "What is a potential downside of using the bag of words representation in text processing?",
+        "choices": [
+            "It increases the dimensionality of the data.",
+            "It ignores the ordering of words in the text.",
+            "It requires extensive pre-processing.",
+            "It enhances the semantic understanding of the text."
+        ],
+        "answer": 2
+    },
+    {
+        "question": "What is the main purpose of stemming and lemmatization in text processing?",
+        "choices": [
+            "To convert all words to uppercase for consistency.",
+            "To map multiple words to their root form.",
+            "To remove punctuation from the text.",
+            "To increase the vocabulary size for better representation."
+        ],
+        "answer": 2
+    },
+    {
+        "question": "What is the relationship between the eigenvectors of \\( X^T X \\) and \\( XX^T \\) as discussed in the text?",
+        "choices": [
+            "They have different eigenvalues and eigenvectors.",
+            "They share the same eigenvalues but have different eigenvectors.",
+            "They share both the same eigenvalues and eigenvectors.",
+            "They are not related in any way."
+        ],
+        "answer": 3
+    },
+    {
+        "question": "What does singular value decomposition (SVD) help achieve in the context of document representation?",
+        "choices": [
+            "It eliminates the need for a vocabulary.",
+            "It provides a way to visualize documents and words in R-dimensional space.",
+            "It increases the dimensionality of the data.",
+            "It solely focuses on the frequency of words in documents."
+        ],
+        "answer": 2
+    },
+    {
+        "question": "What is a key criticism of traditional latent semantic analysis mentioned in the text?",
+        "choices": [
+            "It cannot handle large datasets effectively.",
+            "The interpretation of negative values is unclear.",
+            "It fails to identify synonyms within the vocabulary.",
+            "It requires a predefined number of topics to be effective."
+        ],
+        "answer": 2
+    },
+    {
+        "question": "What is the significance of the term \"multivariate\" in the context of the document generation model discussed in the text?",
+        "choices": [
+            "It refers to a model with a single variable.",
+            "It indicates that multiple classes are being considered.",
+            "It signifies that multiple variables are involved in the generation process.",
+            "It means that the model only considers unique elements."
+        ],
+        "answer": 3
+    },
+    {
+        "question": "What distinguishes the multinomial distribution model from the multivariate Bernoulli model in document generation?",
+        "choices": [
+            "The multinomial distribution allows for frequency counts of words, while the multivariate Bernoulli model only considers presence or absence.",
+            "The multinomial distribution uses a binary representation of words, while the multivariate Bernoulli model uses count vectors.",
+            "The multinomial distribution requires fewer parameters than the multivariate Bernoulli model.",
+            "The multinomial distribution does not consider the length of the document, while the multivariate Bernoulli model does."
+        ],
+        "answer": 1
+    },
+    {
+        "question": "What is the primary purpose of using a taxonomy in the context of the text?",
+        "choices": [
+            "To organize documents into a hierarchical structure for easier navigation and classification.",
+            "To analyze the frequency of words in a dataset.",
+            "To enhance the performance of a machine learning algorithm.",
+            "To create a visual representation of data relationships."
+        ],
+        "answer": 1
+    },
+    {
+        "question": "What does the acronym \"SM\" stand for in the context of the SPACEY model mentioned in the text?",
+        "choices": [
+            "Small Model",
+            "Standard Model",
+            "Semantic Model",
+            "Simple Model"
+        ],
+        "answer": 1
+    }
+]

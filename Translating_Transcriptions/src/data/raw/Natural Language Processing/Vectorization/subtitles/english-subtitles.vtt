@@ -1,0 +1,2542 @@
+WEBVTT
+
+1
+00:00:05.880 --> 00:00:07.280
+Thank you.
+
+2
+00:00:39.580 --> 00:00:40.940
+Good morning, everyone.
+
+3
+00:00:50.520 --> 00:00:58.880
+So we had started to discuss text analysis for natural language processing.
+
+4
+00:01:00.700 --> 00:01:07.280
+and we have looked at a number of examples,  the kinds of things that we can do with text.
+
+5
+00:01:09.400 --> 00:01:16.520
+And today we're gonna start with actually  some of the techniques that we use
+
+6
+00:01:17.520 --> 00:01:20.280
+to convert documents to vectors.
+
+7
+00:01:23.960 --> 00:01:32.100
+Now, hopefully, let's just recap very quickly.  what we have talked about up until now.
+
+8
+00:01:33.420 --> 00:01:41.900
+We have as input a set of documents.  We are ignoring any hyperlinks now.
+
+9
+00:01:42.100 --> 00:01:47.020
+We have talked about how we can model hyperlinks as graphs.
+
+10
+00:01:47.360 --> 00:01:55.180
+And so if you ever had to analyze content  that actually had hyperlinks as well,
+
+11
+00:01:55.180 --> 00:02:03.040
+then you would actually have to combine content  with what the graph-based algorithms were.
+
+12
+00:02:04.740 --> 00:02:09.060
+So we're going to focus on the content itself.  So we have a corpus.
+
+13
+00:02:11.660 --> 00:02:15.920
+What we want to do is convert that corpus
+
+14
+00:02:17.160 --> 00:02:23.780
+into a tabular representation where
+
+15
+00:02:23.780 --> 00:02:34.520
+where we have a set of variables that we have extracted from this text.
+
+16
+00:02:35.240 --> 00:02:38.400
+And we call this process vectorization.
+
+17
+00:02:43.880 --> 00:02:51.700
+We talked about the fact that the columns here, the features that we extract here,
+
+18
+00:02:51.700 --> 00:02:59.780
+the simplest method, which is known as a syntactic approach to vectorization,
+
+19
+00:03:03.640 --> 00:03:05.240
+creates a vocabulary
+
+20
+00:03:09.400 --> 00:03:16.180
+and then uses that vocabulary, each of the individual elements of this vocabulary, as features.
+
+21
+00:03:19.080 --> 00:03:28.840
+we talked about the fact that  the basic vocabulary is all unique words  that appear within
+
+22
+00:03:28.840 --> 00:03:35.060
+the corpus  but then we also talked about key phrases
+
+23
+00:03:39.080 --> 00:03:46.020
+like the United Nations  like  the United States of America
+
+24
+00:03:46.020 --> 00:03:55.980
+like the Republic of India  or in fact we even used some  examples like
+
+25
+00:03:57.660 --> 00:04:06.580
+Durga Puja. These were all key phrases  and these needs to be extracted from the text
+
+26
+00:04:06.580 --> 00:04:14.320
+because we don't really know which sequence of words  creates a key phrase and in fact key phrases
+
+27
+00:04:14.320 --> 00:04:17.840
+are sometimes even dependent on what are these documents about.
+
+28
+00:04:20.360 --> 00:04:24.600
+And then what we said was that actually some key phrases have a type,
+
+29
+00:04:25.420 --> 00:04:30.360
+and we refer to those as named entities.
+
+30
+00:04:34.260 --> 00:04:40.880
+Where we had seen examples like the Bharti-Ajantra Party being a named entity.
+
+31
+00:04:43.320 --> 00:04:49.680
+the Congress would be another example  of a named entity.  The Ahmadinejad Party
+
+32
+00:04:50.800 --> 00:04:57.260
+like the Bhartia Jinta Party would be a key phrase  that has a type therefore it would be  a named entity.
+
+33
+00:04:59.660 --> 00:05:04.860
+All three of these  would be of type  political party.
+
+34
+00:05:08.660 --> 00:05:17.820
+And then the three examples  that we gave are what we refer to as instances of this type.
+
+35
+00:05:22.420 --> 00:05:34.760
+So the unique words and the key phrases create our vocabulary, and we can then assign each one of
+
+36
+00:05:34.760 --> 00:05:43.880
+these elements of the vocabulary as columns.  And then we can either put a 1 or a 0
+
+37
+00:05:46.360 --> 00:05:51.780
+as the vector representation of a single document.
+
+38
+00:05:53.700 --> 00:06:01.320
+Does this element of the vocabulary appear in this?  Does it not appear?  We also saw an alternative.
+
+39
+00:06:01.320 --> 00:06:05.340
+And so in this case, this is a binary vector.
+
+40
+00:06:08.440 --> 00:06:15.660
+We also looked at an alternative where we can put in the frequency with which words appear in the document.
+
+41
+00:06:17.540 --> 00:06:25.300
+And in Python library vocabulary, we call that the count vectorizer.
+
+42
+00:06:28.980 --> 00:06:37.080
+The vectorizer is what creates the vector.  You basically have a count vector when you produce it  through the count vectorizer.
+
+43
+00:06:39.720 --> 00:06:44.600
+And then we also looked at the TFIDF vectorizer
+
+44
+00:06:48.780 --> 00:06:55.820
+that balanced the frequency with which a word appeared in a document
+
+45
+00:06:56.780 --> 00:07:02.040
+and the frequency with which it appeared across the corpus, across documents.
+
+46
+00:07:02.880 --> 00:07:07.380
+So the more common the word that it appears in all documents within the corpus,
+
+47
+00:07:07.380 --> 00:07:15.560
+the less excited we are about it as representing what an individual document is about.
+
+48
+00:07:17.040 --> 00:07:22.220
+The higher the frequency of the word in the document, the more encouraged we are that this
+
+49
+00:07:22.220 --> 00:07:29.720
+document is something to do with this element of the vocabulary. Right? And we will look at this
+
+50
+00:07:29.720 --> 00:07:36.580
+in a little more detail soon in any case, but these are the three syntactic vectorization approaches.
+
+51
+00:07:37.380 --> 00:07:47.580
+And then what we said was the big problem with this, there are a number of problems, but the biggest problem is that it is vocabulary dependent.
+
+52
+00:07:48.940 --> 00:07:56.680
+And so what we really want is a representation of a document that is semantic in nature.
+
+53
+00:07:58.640 --> 00:08:05.280
+Where these columns represent semantic elements.
+
+54
+00:08:06.080 --> 00:08:13.320
+what is this document about conceptually?  So at a higher level of abstraction,
+
+55
+00:08:13.680 --> 00:08:22.560
+we are wanting to have columns  that can represent the semantics.
+
+56
+00:08:22.860 --> 00:08:29.820
+What is this document about?  And what we said there was,  if we can find topics
+
+57
+00:08:32.940 --> 00:08:38.560
+where topics  drive the vocabulary that is used.
+
+58
+00:08:40.320 --> 00:08:49.860
+So you could actually say  the author of a document  and the topic together
+
+59
+00:08:49.860 --> 00:08:56.980
+drive the words or vocabulary  used in a topic.
+
+60
+00:08:59.820 --> 00:09:09.420
+And in fact, typically a document isn't related to a single topic.  It is a mixture of topics.
+
+61
+00:09:12.360 --> 00:09:18.780
+And so based on that mixture of topics, the vocabulary within this document is generated.
+
+62
+00:09:19.940 --> 00:09:27.420
+and we will look at or we will model these topics as hidden
+
+63
+00:09:32.160 --> 00:09:35.180
+variables. And another word for them is latent.
+
+64
+00:09:38.540 --> 00:09:46.180
+Okay. And so this is what we are, we have discussed to date. We haven't gotten into any  depth, now we're going to go into depth.
+
+65
+00:09:47.600 --> 00:09:52.780
+So the basic idea here is that documents should be represented
+
+66
+00:09:52.780 --> 00:09:58.200
+as vectors in what is referred to as the vector space model,
+
+67
+00:09:59.120 --> 00:10:05.840
+where every point in this space, and of course,  I'm only drawing two dimensions or three dimensions,
+
+68
+00:10:06.240 --> 00:10:11.780
+but every point in this space is now a document.
+
+69
+00:10:13.260 --> 00:10:20.060
+and as long as we can have all documents represented in this space as vectors we can
+
+70
+00:10:20.060 --> 00:10:27.220
+now calculate similarity between them we can therefore apply a lot of the machine learning
+
+71
+00:10:27.220 --> 00:10:34.440
+algorithms now on documents as we had done on structured data so this idea of a vector
+
+72
+00:10:34.440 --> 00:10:41.880
+representation is really all about creating a structured representation of documents.
+
+73
+00:10:44.440 --> 00:10:52.180
+If we think of named entities, we could also instead say forget about the vocabulary that
+
+74
+00:10:52.180 --> 00:11:00.620
+does not belong to the set of named entities. I am only interested in any political party that is
+
+75
+00:11:00.620 --> 00:11:08.880
+mentioned, any person that is mentioned, and so on and so forth.  Right?
+
+76
+00:11:09.040 --> 00:11:15.600
+And so out here, if for a document I have multiple political parties that I've mentioned,
+
+77
+00:11:16.040 --> 00:11:23.360
+now what I can do is I can store them as an array, for example.  Right?
+
+78
+00:11:23.540 --> 00:11:27.680
+And similarly, people that I've mentioned, I could represent as an array.
+
+79
+00:11:27.680 --> 00:11:36.780
+Now, of course, the array is not great for me because I need one value in each element.
+
+80
+00:11:36.780 --> 00:11:43.620
+And so I could actually represent it by doing the equivalent of one hot encoding.  coding.
+
+81
+00:11:47.440 --> 00:11:53.060
+And so I would generate a much larger dimensionality
+
+82
+00:11:54.340 --> 00:12:02.860
+where I would now have the BJP, the Congress, et cetera,  et cetera, as columns.
+
+83
+00:12:03.600 --> 00:12:12.460
+And I would now have a 1 in each of the ones that appear  and 0s in the ones that don't appear.  Right?
+
+84
+00:12:12.460 --> 00:12:18.420
+So out here, what am I doing?  If I limit myself to only using the named entities,
+
+85
+00:12:20.300 --> 00:12:27.320
+I am ignoring all words that are not entities.  I am restricting my vocabulary.
+
+86
+00:12:33.140 --> 00:12:35.600
+I am doing dimensionality reduction
+
+87
+00:12:37.500 --> 00:12:47.260
+and focusing on just the different types of data that are represented in the text.
+
+88
+00:12:49.800 --> 00:12:55.940
+Now, which one is the better approach to use? Ultimately, you're going to end up with this
+
+89
+00:12:55.940 --> 00:13:00.900
+vector representation. All that's happening is that out of the complete vocabulary,
+
+90
+00:13:02.040 --> 00:13:08.240
+which is key phrases and unique words we are now coming up with a representation where we
+
+91
+00:13:08.240 --> 00:13:14.760
+have limited it to be only those key phrases and words that are instances of some entities
+
+92
+00:13:17.680 --> 00:13:27.380
+now if there's too much of loss of information by dropping  the rest of the vocabulary you're not going to get a very good model right but this is really
+
+93
+00:13:27.380 --> 00:13:31.820
+again, a feature engineering problem.
+
+94
+00:13:36.300 --> 00:13:43.980
+So for now, we will assume that we  want to use all of the unique words and key phrases  in our vocabulary.
+
+95
+00:13:45.520 --> 00:13:52.180
+And that would be our vector space model for our documents.
+
+96
+00:13:53.360 --> 00:14:08.480
+Now, one of the downsides of doing this representation, which is also known as the bag of words representation, is the fact that we ignore the ordering of words.
+
+97
+00:14:09.180 --> 00:14:22.660
+So, the poor man ate the food and the man ate the poor food have the same bag of words representation because we are ignoring the sequence in which the words are.
+
+98
+00:14:23.780 --> 00:14:24.420
+Right?
+
+99
+00:14:24.520 --> 00:14:33.900
+So, in a way, this is a simplification of the problem where we are saying, well, the sequence in which the words appear are not important.
+
+100
+00:14:34.360 --> 00:14:37.140
+All that's important is that the word appeared.
+
+101
+00:14:37.140 --> 00:14:48.960
+And so when we were talking about the Bayesian approach to text and we said, you know, they were really representing only statistical properties.
+
+102
+00:14:49.780 --> 00:14:55.140
+And one of the simplifying assumptions they made was that the sequence was not important.
+
+103
+00:14:55.140 --> 00:15:09.400
+We look at why that was the case, but you can see that the vector space model was kind of influenced by that thought process, that the order of words is not.
+
+104
+00:15:10.820 --> 00:15:22.900
+So then, essentially, from a pre-processing of text is concerned, the basic steps are we tokenize the text,
+
+105
+00:15:22.900 --> 00:15:30.940
+which means we break it down to a word representation.  Now, of course, you would have, for some of you who have played with JackGPT,
+
+106
+00:15:31.760 --> 00:15:38.720
+you know that they also talk about the number of tokens.  They don't talk about words, right?
+
+107
+00:15:39.120 --> 00:15:42.740
+And part of the reason why they talk about tokens rather than words
+
+108
+00:15:42.740 --> 00:15:50.120
+is that they have actually got a subword tokenization method, right?
+
+109
+00:15:50.120 --> 00:16:14.600
+And so while we have talked about taking words as the primitive object and finding key phrases and representing that as a vector representation, which is the traditional way of doing it, the more recent innovations have started to say, actually, we are better off looking at subword tokenization.
+
+110
+00:16:15.120 --> 00:16:18.640
+So breaking it by the way.  Yes, Suman.
+
+111
+00:16:20.140 --> 00:16:27.000
+In case of vector space model, not in case of tokenization,  in case of vector space model,
+
+112
+00:16:27.200 --> 00:16:34.480
+are we taking the plurals of words as separate words  or using the plurals and the singulars as same?
+
+113
+00:16:35.860 --> 00:16:42.620
+It depends on what you do, right?  Here, the second step is stemming and lemmatization, right?
+
+114
+00:16:42.800 --> 00:16:48.220
+And this typically removes not only plurals and singular
+
+115
+00:16:48.220 --> 00:16:56.500
+and k makes them one, but it actually goes to the root word, right? Like organize without the e
+
+116
+00:16:57.720 --> 00:17:07.300
+replaces organizing, organizes and organize. Okay. Okay. So again, the reason for doing that is
+
+117
+00:17:07.300 --> 00:17:12.160
+to reduce the dimensionality. The curse of dimensionality is a real problem when it comes
+
+118
+00:17:12.160 --> 00:17:17.880
+to text, right? Because the number of unique words and key phrases often goes into millions.
+
+119
+00:17:22.480 --> 00:17:28.780
+so once we have done the tokenization again we may or may not want to remove the punctuation
+
+120
+00:17:30.380 --> 00:17:38.800
+because in certain applications the punctuation may be important another thing that people say  you should do is to
+
+121
+00:17:41.020 --> 00:17:47.160
+convert every word to lowercase that may or may not be the best thing to do
+
+122
+00:17:47.160 --> 00:18:06.060
+When you're looking for named entities, for example, there are features that say, well, you know, if you have some capital letters, it's likely to be a noun, which could be a person or a, you know, a location or a temp.
+
+123
+00:18:07.360 --> 00:18:16.320
+but in general  what we would do is to minimize  the vocabulary size  after tokenizing and removing  punctuation
+
+124
+00:18:16.320 --> 00:18:25.340
+we would also  change the  case to lowercase  for all words and then
+
+125
+00:18:25.340 --> 00:18:35.280
+we would do stemming and  lemmatization, two different approaches  to mapping  multiple words  to their root form
+
+126
+00:18:36.780 --> 00:18:44.180
+and then we remove stop words, words like a, and, the, and, but.  So there is a list of stop words.
+
+127
+00:18:46.560 --> 00:18:54.840
+So this is just based on a lookup to say, is this word in the stop words?  If it is, we throw it out and don't add it to our vector representation.
+
+128
+00:18:57.140 --> 00:19:05.280
+Now, stemming and lemmatization.  lemmatization requires a thesaurus
+
+129
+00:19:05.280 --> 00:19:13.320
+stemming algorithmically  changes words right so am
+
+130
+00:19:13.320 --> 00:19:22.720
+will become b in lemmatization  and remains am from stemming going
+
+131
+00:19:22.720 --> 00:19:31.320
+remains going and stemming but becomes go in  sorry, remains going in lemmatization
+
+132
+00:19:31.320 --> 00:19:37.700
+but becomes go in stemming.  And having becomes have in lemmatization
+
+133
+00:19:37.700 --> 00:19:44.800
+but becomes H-A-V in stemming.  Now stemming typically can result
+
+134
+00:19:44.800 --> 00:19:53.880
+in these kind of non-English words  while identifying the root.  And so it takes away a little bit
+
+135
+00:19:53.880 --> 00:20:01.080
+from the understanding of  what is the word that is important within a document
+
+136
+00:20:01.080 --> 00:20:09.240
+once you've stemmed it.  So just be aware of this,  but these are ways that were used in the past,
+
+137
+00:20:10.220 --> 00:20:18.560
+and so it's less relevant in any case at this point  to reduce the vocabulary size.
+
+138
+00:20:18.560 --> 00:20:26.120
+And I'll tell you why it's become less relevant later on.  Okay.  OK.
+
+139
+00:20:30.780 --> 00:20:39.160
+Now, we talked about the syntactic representation  and we've talked about TF-IDF.  So once we have identified our vocabulary,
+
+140
+00:20:39.160 --> 00:20:48.520
+whether this is a word or a key phrase,  we need to assign it a weight.  And that one way of assigning the weight
+
+141
+00:20:48.520 --> 00:20:54.880
+is TF-IDF, other than just looking at the count  or a binary representation or one or zero.
+
+142
+00:20:57.880 --> 00:21:07.280
+So let's look at a very simple example.  We have these eight documents here.  We've actually just got the titles of these documents.  And we can see by looking at this
+
+143
+00:21:08.540 --> 00:21:17.920
+that the first few documents seem to be about  computer human machine interface.
+
+144
+00:21:22.220 --> 00:21:26.280
+The last three documents here are about graph theory.
+
+145
+00:21:30.240 --> 00:21:36.060
+We studied how to analyze graphs.  So these are related to that topic.
+
+146
+00:21:39.120 --> 00:21:48.020
+Now, this is our corpus, all of it.  and so we can convert it into a vectorized form in this way here.
+
+147
+00:21:51.060 --> 00:22:00.740
+Now, what I've been talking about is that every word becomes a column.  I have taken the transpose of that.  And so it doesn't really matter.
+
+148
+00:22:00.740 --> 00:22:07.960
+What we are now saying is that a document has a vector representation that looks like this.
+
+149
+00:22:09.260 --> 00:22:17.960
+Now to make it easier, I've taken a subset of the vocabulary.  We are taking the vocabulary to only be words, not key phrases.
+
+150
+00:22:18.360 --> 00:22:26.160
+And so we have 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12.  A vocabulary of size 12 here.
+
+151
+00:22:26.720 --> 00:22:32.640
+And you can see that we have count vectorized each of our documents.
+
+152
+00:22:33.680 --> 00:22:51.280
+Now, if we look at the word human in document 1, if we were calculating the TFIDF, we would say, okay, human has a frequency of 1.
+
+153
+00:22:52.380 --> 00:23:00.000
+There are 1, 2, 3, 4, 5, 6 words.  This is a stock word.
+
+154
+00:23:01.960 --> 00:23:08.160
+so we have removed it  and I can only see the three words here
+
+155
+00:23:08.160 --> 00:23:15.700
+the rest of the words I have kind of cut off because I didn't have enough space  to show it. So 1 out of 6
+
+156
+00:23:15.700 --> 00:23:23.800
+is the frequency part of this. So this is the TF  the term frequency and here
+
+157
+00:23:23.800 --> 00:23:26.940
+8 is the number of documents
+
+158
+00:23:29.740 --> 00:23:34.700
+and we can see human appears in document 1 and document 4.
+
+159
+00:23:34.700 --> 00:23:42.720
+So its document frequency is 2.
+
+160
+00:23:44.120 --> 00:23:52.640
+And so the way we calculate DFIDF is term frequency  inverse document frequency.
+
+161
+00:23:52.780 --> 00:24:00.440
+So 2 by 8 is the document frequency.  We make it 8 by 2.  and we get this value of 0.23.
+
+162
+00:24:00.700 --> 00:24:09.000
+So if we wanted to now instead represent our documents as vectors of TF-IDF scores,
+
+163
+00:24:09.000 --> 00:24:18.180
+we can calculate them.  So the first step, really, of calculating the TF-IDF  is to really do a counter-vectorization of the documents.
+
+164
+00:24:20.660 --> 00:24:24.260
+Now, I'm going to skip this because we looked at this
+
+165
+00:24:24.260 --> 00:24:33.420
+in principal component analysis, but what I'm going to move on to is what is singular value
+
+166
+00:24:33.420 --> 00:24:42.840
+decomposition. Singular value decomposition is a linear algebra method
+
+167
+00:24:49.860 --> 00:24:59.740
+and is based around eigenvalue decomposition.  And this was the first semantic vectorization approach
+
+168
+00:24:59.740 --> 00:25:07.220
+that was proposed.  Now, singular value decomposition
+
+169
+00:25:07.220 --> 00:25:14.720
+was the method used for doing semantic vectorization.  When applied to textual documents,
+
+170
+00:25:14.780 --> 00:25:19.980
+it was known as latent semantic analysis.
+
+171
+00:25:32.960 --> 00:25:36.060
+So what was singular value decomposition, first of all?
+
+172
+00:25:38.600 --> 00:25:45.460
+This matrix that I had, x, where we had word 1, word 2,
+
+173
+00:25:45.720 --> 00:25:53.280
+to word m, and we had d1, d2, to dn.
+
+174
+00:25:55.400 --> 00:26:02.740
+we are going to refer to this as x.  And so when we go x transpose,
+
+175
+00:26:03.240 --> 00:26:12.700
+x transpose is going to be an n by m matrix  multiplied by an m by n matrix.
+
+176
+00:26:12.700 --> 00:26:17.480
+So what are we going to end up with?  We're going to end up with a n by n matrix.
+
+177
+00:26:21.560 --> 00:26:24.460
+When we were doing principal component analysis,
+
+178
+00:26:25.440 --> 00:26:34.880
+what we did was we said we have x1, x2 to xn,
+
+179
+00:26:34.880 --> 00:26:39.100
+and we had various objects, 1, 2, 0, m.
+
+180
+00:26:41.100 --> 00:26:46.040
+and we first computed the covariance matrix.
+
+181
+00:26:50.300 --> 00:26:55.420
+And the covariance matrix was an n by n matrix,
+
+182
+00:26:58.280 --> 00:27:05.580
+which, given that we have these variables describing each object,
+
+183
+00:27:06.980 --> 00:27:15.220
+it stored the variance along the diagonal of the matrix and the covariance
+
+184
+00:27:16.480 --> 00:27:24.860
+in the non-diagonal elements here. Right? So this here was the variance of Xi
+
+185
+00:27:26.620 --> 00:27:32.300
+and this, depending on which row and column it was,
+
+186
+00:27:32.500 --> 00:27:42.020
+was the covariance of xi and xj.  So here also we've got an n by n matrix.
+
+187
+00:27:43.400 --> 00:27:47.620
+So what can we kind of visualize this as?
+
+188
+00:27:48.180 --> 00:27:53.560
+We can visualize it that we are treating this matrix x
+
+189
+00:27:55.160 --> 00:28:00.200
+as each word being an object
+
+190
+00:28:00.200 --> 00:28:08.260
+that is represented by its occurrence  within the end document.
+
+191
+00:28:08.520 --> 00:28:14.640
+So the documents themselves  are now our variables
+
+192
+00:28:14.640 --> 00:28:19.680
+that in some way are describing our word.
+
+193
+00:28:23.560 --> 00:28:32.760
+And so this x transpose x, if we do an eigenvector  decomposition on it, which is essentially
+
+194
+00:28:33.400 --> 00:28:36.180
+the same as what we do in principal component analysis,
+
+195
+00:28:37.400 --> 00:28:46.740
+and we have r eigenvectors, right?
+
+196
+00:28:48.980 --> 00:28:52.400
+What that means is for every one of these eigenvectors,
+
+197
+00:28:52.400 --> 00:29:01.100
+x transpose x times vi is equal to lambda i vi. This is by just the definition of
+
+198
+00:29:03.600 --> 00:29:12.060
+an eigenvector and eigenvalue which is lambda i.
+
+199
+00:29:14.620 --> 00:29:25.340
+Now, let us define r vectors u1 to ur as this here.
+
+200
+00:29:25.540 --> 00:29:32.280
+So we are taking the x matrix, which is this matrix here.
+
+201
+00:29:32.780 --> 00:29:41.720
+We are multiplying by vi, which is the eigenvector of x transpose x.
+
+202
+00:29:43.080 --> 00:29:49.160
+and we are multiplying by 1 divided by the square root of lambda i.
+
+203
+00:29:49.160 --> 00:30:05.540
+It turns out that these UIs are also orthonormal. Why am I saying also? Because these eigenvectors are orthonormal. So, these sets of vectors are orthonormal as well.
+
+204
+00:30:10.760 --> 00:30:20.320
+So if I now say x and I essentially put v1, v2,
+
+205
+00:30:20.320 --> 00:30:29.900
+to vr as columns within a matrix, and I call this matrix v,
+
+206
+00:30:31.140 --> 00:30:40.120
+then what we have is x times v is equal to u lambda.
+
+207
+00:30:40.720 --> 00:30:46.080
+Where what are u? u r, u 1, u 2, u r.
+
+208
+00:30:50.440 --> 00:30:55.300
+And lambda here is lambda 1, lambda 2,
+
+209
+00:30:56.400 --> 00:31:00.980
+to lambda r.
+
+210
+00:31:10.060 --> 00:31:20.040
+Right?  And it's the square root of the lambda.  Sorry.  This should be square root of that.  So we've taken this lambda i  and multiplied it on this side.
+
+211
+00:31:24.900 --> 00:31:34.860
+now if we multiply both sides by the inverse of v we get x v v inverse is equal to
+
+212
+00:31:35.820 --> 00:31:39.740
+u lambda v inverse
+
+213
+00:31:42.520 --> 00:31:49.320
+so this will become the identity matrix so we can ignore it so this is just x
+
+214
+00:31:51.320 --> 00:31:56.800
+and because the vectors V are orthonormal,
+
+215
+00:31:59.640 --> 00:32:08.280
+V inverse is actually the same as V transpose.  Right?
+
+216
+00:32:08.480 --> 00:32:15.020
+Because if we are looking at a vector, a matrix V,
+
+217
+00:32:16.480 --> 00:32:20.500
+the inverse is something that produces the identity matrix.
+
+218
+00:32:22.300 --> 00:32:31.060
+Now each element in the product of these two, right?  So V, V inverse, each element here,
+
+219
+00:32:32.440 --> 00:32:40.460
+any of these elements are essentially the dot product  of a vector in V, which is a row,
+
+220
+00:32:41.500 --> 00:32:49.320
+and a vector in V inverse which is a coliform.  So if we take the transpose,
+
+221
+00:32:50.900 --> 00:32:58.200
+what are we going to end up with?  This element here is going to be V1 dot V1
+
+222
+00:32:59.560 --> 00:33:03.580
+which is the length of the vector which is 1  because it's orthonormal.
+
+223
+00:33:05.160 --> 00:33:09.920
+And any non-diagonal element is going to be V1 dot Vj.
+
+224
+00:33:12.560 --> 00:33:20.460
+And, of course, that is equal to 0 because they are appendicular to each other.  That's the orthogonal part of this.
+
+225
+00:33:21.900 --> 00:33:30.420
+And so V V transpose is going to be the identity matrix.  Oops, apologies.
+
+226
+00:33:30.420 --> 00:33:36.800
+And so the inverse of a matrix where the columns are
+
+227
+00:33:36.800 --> 00:33:42.580
+perpendicular to each other is going to be the transpose.
+
+228
+00:33:42.940 --> 00:33:48.360
+And so what we are getting here is an interesting behavior.
+
+229
+00:33:51.660 --> 00:33:58.220
+That if we take the eigenvectors of x transpose x,
+
+230
+00:34:00.420 --> 00:34:08.460
+We stack them up into columns and take the transpose of that,
+
+231
+00:34:08.620 --> 00:34:10.520
+which is the equivalent of stacking them as rows.
+
+232
+00:34:14.680 --> 00:34:20.040
+And we define a new set of vectors, as we have done here.
+
+233
+00:34:21.420 --> 00:34:30.100
+What we are getting is actually a decomposition,  or matrix factorization.
+
+234
+00:34:30.920 --> 00:34:41.540
+This is called matrix factorization, where we have a matrix X that can be represented as a product of two or more matrices.
+
+235
+00:34:44.280 --> 00:34:46.700
+Where have we heard factorization before?
+
+236
+00:34:47.660 --> 00:34:54.280
+In school, we were told factorize 12, and we would write 2 plus 2, 2 times 2 times 3.
+
+237
+00:34:54.680 --> 00:34:58.200
+These are the prime factors, right?
+
+238
+00:35:01.740 --> 00:35:05.080
+So we are doing the same here, but we are doing it at a matrix level.
+
+239
+00:35:10.180 --> 00:35:19.220
+Now, this here, like we said, is a diagonal matrix with the diagonal elements being the
+
+240
+00:35:19.220 --> 00:35:29.560
+square root of lambda i. Now, if we look to calculate x, x transpose now, we know that x
+
+241
+00:35:29.560 --> 00:35:38.580
+can be written as u lambda v transpose.  So we plug those in here.  And what do we get?
+
+242
+00:35:38.700 --> 00:35:44.520
+We get u lambda squared u transpose.
+
+243
+00:35:47.220 --> 00:35:49.820
+Because what happens when we open this up,
+
+244
+00:35:51.100 --> 00:35:57.300
+it becomes u transpose lambda transpose v transpose of
+
+245
+00:35:57.300 --> 00:36:09.120
+transpose, which is V. Oops, the wrong way. It becomes V lambda U transpose. That's this part
+
+246
+00:36:09.120 --> 00:36:19.780
+here. We multiply it with U lambda V transpose. V transpose V is the identity matrix. So it
+
+247
+00:36:19.780 --> 00:36:26.160
+disappears and we end up with u lambda squared u transpose.
+
+248
+00:36:30.740 --> 00:36:38.140
+The square of a diagonal matrix is really the square of the diagonal elements, and so you
+
+249
+00:36:38.140 --> 00:36:49.380
+end up with essentially this representation here, which is x x transpose is equal to u
+
+250
+00:36:50.600 --> 00:36:57.660
+the matrix with all lambda 1 to lambda r u transpose.
+
+251
+00:37:00.160 --> 00:37:08.080
+And if we now take this to this side by multiplying by u,
+
+252
+00:37:09.220 --> 00:37:19.480
+we are basically going to get x x transpose u is equal to 2 with lambda 1.
+
+253
+00:37:19.780 --> 00:37:27.260
+lambda n, which is actually what we were seeing here.
+
+254
+00:37:29.220 --> 00:37:43.500
+So while the vi's are the eigenvectors of x transpose x, these ui's are the eigenvectors
+
+255
+00:37:43.500 --> 00:37:56.060
+of x x transpose and both have the same eigenvalues. Now let's look at what x x transpose is.
+
+256
+00:37:59.640 --> 00:38:11.780
+x x transpose x is m by n n transpose would be n by m and so this would be an m by m matrix.
+
+257
+00:38:16.740 --> 00:38:24.720
+So what we are doing here is just as we said that X transpose X was like calculating the covariance
+
+258
+00:38:26.020 --> 00:38:33.960
+matrix where we treated our documents as our variables. Out here, XX transpose,
+
+259
+00:38:33.960 --> 00:38:40.180
+O's, on the other hand, is the covariance matrix
+
+260
+00:38:43.480 --> 00:38:53.120
+for the representation of documents as words.  There are m words in our vocabulary here.
+
+261
+00:38:54.240 --> 00:39:00.740
+We are representing this as an m by m matrix.  So we are treating every word as a variable instead.
+
+262
+00:39:04.480 --> 00:39:27.760
+And so, in a way, what we are doing here, when we do singular value decomposition and do a matrix factorization of x into a product of three matrices, what we end up with is a parallel eigenvalue decomposition.
+
+263
+00:39:31.960 --> 00:39:41.840
+of x transpose x and x x transpose.  So we have the eigenvectors.
+
+264
+00:39:44.000 --> 00:39:51.760
+And remember what we did here, right?  When we did a principal component analysis  and we chose the k eigenvectors, what did we end up with?
+
+265
+00:39:54.320 --> 00:40:02.040
+we ended up with an R dimensional representation of each of our objects.
+
+266
+00:40:04.580 --> 00:40:19.480
+So what has happened here is that we have taken R X transpose, sorry, X X transpose
+
+267
+00:40:21.460 --> 00:40:30.060
+where we are saying our words are  variables. And as a result
+
+268
+00:40:30.060 --> 00:40:37.200
+we have got an R dimensional representation.  So the U is an R dimensional representation
+
+269
+00:40:40.220 --> 00:40:43.020
+of  documents.
+
+270
+00:40:47.560 --> 00:40:53.760
+and our V is our R dimensional representation
+
+271
+00:40:58.280 --> 00:41:07.400
+of words.  Right? These were our variables.
+
+272
+00:41:07.400 --> 00:41:11.500
+Therefore, we got an R dimensional representation of words.
+
+273
+00:41:11.500 --> 00:41:27.020
+in the other case we were treating each of these as our observations and treating words as our variables
+
+274
+00:41:27.020 --> 00:41:36.620
+so we got our dimensional representation of documents right so
+
+275
+00:41:37.760 --> 00:41:47.520
+So we get not just a representation of objects  in R-dimensional space as we get with principal component
+
+276
+00:41:47.520 --> 00:41:51.780
+analysis with singular value decomposition applied
+
+277
+00:41:51.780 --> 00:41:59.260
+to a vectorization of documents where the matrix is represented  as shown here.
+
+278
+00:42:00.980 --> 00:42:08.400
+We end up with an R-dimensional representation for words  and an R-dimensional representation of documents.
+
+279
+00:42:08.460 --> 00:42:16.200
+And that is what is referred to as latent semantic analysis.  So let's look at what happens here.
+
+280
+00:42:16.820 --> 00:42:25.780
+We have our X matrix, which is this one here.
+
+281
+00:42:26.580 --> 00:42:27.820
+Documents as columns.
+
+282
+00:42:35.460 --> 00:42:44.880
+and if we look at sorry let's yeah okay so we are saying x is equal to u s v transpose
+
+283
+00:42:46.340 --> 00:42:56.320
+x here was something by eight how many words were there 12 words
+
+284
+00:43:01.620 --> 00:43:11.440
+12 times 8.  This now is going to be 12 times R  and becomes our word representation in R dimensional space.
+
+285
+00:43:13.260 --> 00:43:18.680
+Our S here becomes R by R
+
+286
+00:43:18.680 --> 00:43:25.000
+and our V transpose will be R by 8.
+
+287
+00:43:28.180 --> 00:43:35.740
+which means V itself is going to be 8 by R, right?  And there were 8 documents.
+
+288
+00:43:37.540 --> 00:43:39.540
+And there were 12 words.
+
+289
+00:43:40.040 --> 00:43:48.460
+So we have words as represented in R-dimensional space
+
+290
+00:43:48.460 --> 00:43:52.520
+and we have documents represented in R-dimensional space.
+
+291
+00:43:55.520 --> 00:44:05.420
+Now, just as we did in principal component analysis, these diagonal elements are representing the variance.
+
+292
+00:44:07.740 --> 00:44:15.600
+But remember that the variance is the eigenvalues.
+
+293
+00:44:17.820 --> 00:44:25.940
+This matrix here is the square root of the eigenvalues, right?
+
+294
+00:44:26.140 --> 00:44:30.100
+And so these are referred to as singular values.
+
+295
+00:44:34.780 --> 00:44:41.640
+And just as we had a descending order to the eigenvalues after we did
+
+296
+00:44:41.640 --> 00:44:45.600
+principle component analysis, we have a
+
+297
+00:44:46.380 --> 00:44:57.740
+The more of the variance is being captured. But the variance itself being captured is the square of these.
+
+298
+00:44:59.820 --> 00:45:09.640
+Right? So in this case, if I want to just visualize my words and documents, I will choose the two top  eigenvalues.
+
+299
+00:45:10.400 --> 00:45:19.860
+As a result of choosing  this as a 2 by 2,  so I'm saying r is 2,  therefore I must look at  each word now
+
+300
+00:45:21.100 --> 00:45:30.720
+as being  two-dimensional  with these coordinates.  And every document,  which is a column,
+
+301
+00:45:31.660 --> 00:45:34.760
+is being represented as a two-dimensional  representation.
+
+302
+00:45:38.020 --> 00:45:45.260
+So now, of course, I can visualize those like this.  So each dot here is a word.
+
+303
+00:45:48.260 --> 00:45:55.080
+And each dot here is a document.  And what we can see is there are these three documents that are close to each other.
+
+304
+00:45:56.600 --> 00:46:05.720
+These are quite separated from these documents.  And then you have this one document that's sitting out here.
+
+305
+00:46:07.860 --> 00:46:16.220
+which document is sitting right out here?  It is document number 5012345.
+
+306
+00:46:20.020 --> 00:46:26.500
+I think I messed up here.  I've added a new document.  But essentially, if we look at what's happening here,
+
+307
+00:46:30.500 --> 00:46:34.060
+not sure why I have nine documents there.  I'll have to look at it.
+
+308
+00:46:34.060 --> 00:46:40.760
+maybe I by mistake incorporated this but if we look at these documents the last three documents
+
+309
+00:46:40.760 --> 00:46:48.800
+were supposed to be graph related and what we are saying is we have one two three four
+
+310
+00:46:49.380 --> 00:46:55.140
+at least these documents potentially are the documents that are also close to each other
+
+311
+00:46:55.140 --> 00:47:03.300
+and this one may be the one that is a little further away from we'll have to I'll have to  can come back to you or why I have nine problems there.
+
+312
+00:47:05.280 --> 00:47:09.780
+Right?  But here we can see that these are all graph theory.
+
+313
+00:47:10.240 --> 00:47:18.200
+These are all human computer interaction.
+
+314
+00:47:21.520 --> 00:47:30.260
+And maybe this here is a little more on response time  rather than human-computer interaction.
+
+315
+00:47:30.600 --> 00:47:32.480
+So that's why it is separated.
+
+316
+00:47:32.920 --> 00:47:43.220
+We also see that some words here are coming out as similar to each other.
+
+317
+00:47:43.420 --> 00:47:47.520
+These are words that have their second axis.
+
+318
+00:47:49.520 --> 00:47:57.800
+Okay, so this word here and this word here are close to each other.  so what were those words  um
+
+319
+00:48:02.140 --> 00:48:11.560
+graph and my  trees and miners right  and so trees graphs and  miners these are definitely to do  with graph theory that's
+
+320
+00:48:11.560 --> 00:48:19.540
+why they are appearing close to each  other out here on the other  hand if we look at  human and user
+
+321
+00:48:19.540 --> 00:48:28.920
+we would expect these to be close to each other  right a user of a computer  is, as of now at least, a human.  So that's the first and fourth.
+
+322
+00:48:29.220 --> 00:48:35.520
+So first and second, third, fourth.  It's not coming up that close, right?
+
+323
+00:48:35.620 --> 00:48:43.800
+But what we would expect is that the coordinates of these would come close.  Now, of course, take into account that these are,
+
+324
+00:48:44.300 --> 00:48:51.120
+this is a very small corpus that we are using.  Look at this.  These two are very similar, exactly the same.
+
+325
+00:48:51.120 --> 00:49:04.940
+So what are these? 1, 2, 3, 4, 5, 6, 7. 1, 2, 3, 4, 5, 6, 7. Response and time are identical in their representation, right?
+
+326
+00:49:04.940 --> 00:49:08.380
+So we can see that something interesting is happening here.
+
+327
+00:49:09.060 --> 00:49:25.140
+Now, when we get this 12 by 2 matrix here, multiplied by a 2 by 2 matrix, multiplied by a 2 by, in this case, 9, which should be 8 matrix.
+
+328
+00:49:26.660 --> 00:49:34.880
+by multiplying just these red portions  we get a reconstruction of our X.
+
+329
+00:49:39.540 --> 00:49:47.900
+So this is what our X looked like  where we can see
+
+330
+00:49:50.820 --> 00:49:57.240
+that clearly the vocabulary that was being used in these documents
+
+331
+00:49:57.240 --> 00:50:04.860
+were different from the vocabulary being used in these documents.
+
+332
+00:50:09.560 --> 00:50:15.200
+Right?  But the sparseness here, the zeros here,
+
+333
+00:50:15.500 --> 00:50:20.360
+made it look like maybe these weren't as similar to each other.
+
+334
+00:50:21.740 --> 00:50:30.680
+But when we reconstruct x by taking u, s, v transpose,
+
+335
+00:50:32.240 --> 00:50:38.320
+we are now getting not a sparse matrix but a dense matrix.
+
+336
+00:50:44.640 --> 00:50:53.300
+And words that previously had the value 0 in here  now don't have a 0 value.
+
+337
+00:50:55.300 --> 00:51:04.020
+Because even though they didn't mention the value,  the word system, they did mention computer.
+
+338
+00:51:04.280 --> 00:51:08.800
+And computer and system are really synonyms  in the context of what we are talking about.
+
+339
+00:51:09.960 --> 00:51:19.100
+And so we are now filling in these missing values with numbers other than zero.
+
+340
+00:51:19.740 --> 00:51:29.600
+If there are other words in that document that really are suggesting that instead of using the word system, we could have used computer.
+
+341
+00:51:31.120 --> 00:51:39.600
+right and we are seeing that a lot of this area now has larger positive values across the board
+
+342
+00:51:40.600 --> 00:51:49.900
+and similarly here we have larger positive values  across the board compared to what we have in this one
+
+343
+00:51:52.940 --> 00:52:02.920
+Right?  So this shashi tharoor versus my lecture problem,  to some extent, is being resolved  by latent semantic analysis.
+
+344
+00:52:05.820 --> 00:52:10.960
+But critics of this method said, what  do you mean by a negative value?
+
+345
+00:52:15.700 --> 00:52:19.380
+By looking at a positive value, we can say, yeah, OK.
+
+346
+00:52:19.380 --> 00:52:31.280
+So, you know, this word has some importance in the second document.
+
+347
+00:52:34.980 --> 00:52:39.080
+But when we have a negative value, what does that really mean?
+
+348
+00:52:39.480 --> 00:52:46.700
+Does it mean that this word appearing takes away from the meaning of this document?
+
+349
+00:52:49.380 --> 00:52:51.660
+Or what is that negative value representing?
+
+350
+00:52:51.960 --> 00:52:59.760
+So this was the, what was represented as a rebuttal by the Bayesians.
+
+351
+00:53:04.260 --> 00:53:14.380
+Who then went on to propose a probabilistic latent semantic analysis.
+
+352
+00:53:21.060 --> 00:53:30.820
+where essentially you ended up with probabilities in here.  And so when you looked at the coordinates out here,
+
+353
+00:53:32.380 --> 00:53:37.500
+where how do we interpret this?  These are called topic 1 and topic 2.
+
+354
+00:53:38.960 --> 00:53:47.580
+And what was being said here is that word 1  has a membership of this topic of point 2.2.
+
+355
+00:53:47.580 --> 00:54:01.640
+So this word here is much stronger in its connection to topic one compared to this word here.
+
+356
+00:54:04.480 --> 00:54:11.100
+And this word here was much more related to topic two compared to this word.
+
+357
+00:54:11.100 --> 00:54:19.240
+here. And we can see again, right, that these last three words are associated with topic
+
+358
+00:54:19.240 --> 00:54:33.520
+two. The first bunch of words are much more related to topic one. And this word here seems
+
+359
+00:54:33.520 --> 00:54:41.540
+to have an equal representation across those topics.  And what was that word?  Survey.
+
+360
+00:54:45.500 --> 00:54:54.340
+Because survey appeared once here in a document that had more of this vocabulary and also
+
+361
+00:54:54.340 --> 00:55:03.260
+appeared here once in a set of documents that actually had this vocabulary.
+
+362
+00:55:03.980 --> 00:55:11.880
+right? So the jury is out or maybe this word transcends both topics and that is what is
+
+363
+00:55:11.880 --> 00:55:25.220
+represented out here. Right? So you can see that what we are getting is a partitioning of the
+
+364
+00:55:25.220 --> 00:55:33.180
+vocabulary out here. But the criticism was y minus. What does this minus represent?
+
+365
+00:55:33.520 --> 00:55:43.140
+And you can see how if you instead had probabilities where word 1 was looking like this, word 2 and so on.
+
+366
+00:55:43.320 --> 00:55:51.480
+And then the latter words, word 10, word 11, and word 12, word 9.
+
+367
+00:55:51.900 --> 00:56:02.280
+Word 9 looked more like 4 and 0.6, whereas these were more 0.8, 0.9, 0.92.
+
+368
+00:56:07.700 --> 00:56:14.240
+The interpretation is so much easier, right?  What we are saying is that if a topic, topic one,
+
+369
+00:56:15.360 --> 00:56:23.620
+is what is generating a word,  or if we are seeing a word in a document,
+
+370
+00:56:24.540 --> 00:56:34.020
+the likelihood is that topic one generated this word  much more than the likelihood of topic two generated.
+
+371
+00:56:35.080 --> 00:56:40.600
+It's four times more likely that topic one would have generated this word.
+
+372
+00:56:41.640 --> 00:56:48.460
+And so when we look across all the words that appear in a document,  we can then come up with a document representation,
+
+373
+00:56:48.540 --> 00:56:58.280
+saying that the document has maybe 60% of its vocabulary from topic one  and 40% of its vocabulary from topic two.
+
+374
+00:56:58.320 --> 00:57:00.740
+And that would become the document representation.
+
+375
+00:57:02.940 --> 00:57:17.200
+Here again, what we can see is that these are related to topic 1 and these are related
+
+376
+00:57:17.200 --> 00:57:23.960
+more to topic 2.  Right?  So the partitioning is happening of documents.
+
+377
+00:57:26.100 --> 00:57:32.420
+but what these actually mean especially the negative values became a question that was asked
+
+378
+00:57:32.420 --> 00:57:41.500
+so let's take a break from the theory of it uh oh actually maybe not i was going to go into
+
+379
+00:57:41.500 --> 00:57:50.420
+some text but let me now do this next topic before i get on to some of the code
+
+380
+00:57:52.740 --> 00:58:00.560
+So what we have seen is three methods for syntactic vectorization.
+
+381
+00:58:02.160 --> 00:58:10.280
+And as of now, we have seen one method for semantic representation or semantic vectorization.
+
+382
+00:58:12.960 --> 00:58:18.920
+Where each document now is represented in this two-dimensional topic space.
+
+383
+00:58:21.560 --> 00:58:27.200
+Either way, what we now want to do is apply this to something.
+
+384
+00:58:28.480 --> 00:58:33.220
+And when we started this topic, we had talked about text categorization.
+
+385
+00:58:40.300 --> 00:58:49.360
+Where we have documents that have a particular class associated.  Is this a sports document? Is this a politics document? Is it a whatever?
+
+386
+00:58:51.800 --> 00:59:01.600
+So now that we have been able to vectorize documents,  this essentially becomes a standard machine learning  problem.
+
+387
+00:59:03.640 --> 00:59:09.680
+But before we even vectorize the documents,
+
+388
+00:59:10.660 --> 00:59:17.840
+or maybe we could look at this as justifying why we are doing  what we are doing in the vectorization,
+
+389
+00:59:17.840 --> 00:59:21.780
+especially the syntactic vectorization.
+
+390
+00:59:25.660 --> 00:59:33.080
+We talked about the vector space model for documents.  Let's look at some probabilistic models for documents instead.
+
+391
+00:59:34.700 --> 00:59:41.560
+So the idea here is we are talking about a...
+
+392
+00:59:41.560 --> 00:59:44.580
+We are talking about a probabilistic model, therefore we must be talking about generative models.
+
+393
+00:59:47.360 --> 00:59:54.380
+And what we are saying is that we have a corpus. A corpus consists of a number of documents.
+
+394
+00:59:55.360 --> 01:00:07.080
+And each document is generated from a mixture model, parameterized by some parameter vector.
+
+395
+01:00:18.560 --> 01:00:25.780
+Now, we've come across mixture models before when we were looking at the EM algorithm for
+
+396
+01:00:25.780 --> 01:00:34.020
+clustering. And essentially, a mixture model is a probability distribution defined by a linear
+
+397
+01:00:34.020 --> 01:00:42.260
+combination of individual probability distribution, also known as components.  and when we were studying the EM algorithm,
+
+398
+01:00:42.280 --> 01:00:46.960
+we had assumed that these components are what?
+
+399
+01:00:52.460 --> 01:01:01.780
+They are Gaussian.  Right?  And each Gaussian had its own parameters
+
+400
+01:01:03.500 --> 01:01:12.660
+and there was another parameter  which was the probability of a component being called upon to generate data.
+
+401
+01:01:14.060 --> 01:01:19.400
+So similarly, we can say that a document DI
+
+402
+01:01:22.760 --> 01:01:29.520
+is generated by a number of components.
+
+403
+01:01:35.280 --> 01:01:38.700
+and each of those components has a probability of
+
+404
+01:01:41.360 --> 01:01:48.700
+being asked to generate a part of this document.  So when we think of a document,
+
+405
+01:01:51.420 --> 01:01:56.700
+we are really saying that a document is a bag of words.
+
+406
+01:01:58.440 --> 01:02:06.660
+why are we using the word bag we're saying it's a bag not a set because a bag can have
+
+407
+01:02:06.660 --> 01:02:13.680
+multiple copies of the same word a set card a set has only unique elements
+
+408
+01:02:16.780 --> 01:02:25.200
+right so what we are saying is that this document has  words in it and those words are generated
+
+409
+01:02:26.280 --> 01:02:32.520
+by calling upon these components.  So the question is,
+
+410
+01:02:34.080 --> 01:02:37.740
+what kind of probability distribution are these components?
+
+411
+01:02:41.840 --> 01:02:50.100
+And there are two models, probabilistic models of documents.  One is the multivariate Bern-Rowli,
+
+412
+01:02:50.320 --> 01:02:54.840
+and the second is the multinomial distribution model.
+
+413
+01:02:59.280 --> 01:03:00.860
+so we're going to look at both of those
+
+414
+01:03:04.320 --> 01:03:11.120
+the multivariate per nauli model what does that tell you there are two really important words
+
+415
+01:03:13.280 --> 01:03:21.180
+multivariate what does multivariate  chair kitchen
+
+416
+01:03:24.400 --> 01:03:30.480
+any idea what it is multivariate we say multivariate statistics also
+
+417
+01:03:32.860 --> 01:03:39.760
+no sir okay sumit any idea what multivariate stands for this word
+
+418
+01:03:47.820 --> 01:03:54.140
+multiple variables. It's as simple as that. Multivariate means multiple variables.
+
+419
+01:03:54.440 --> 01:04:04.400
+So, we are saying we have x1, x2, x3 till xn. What are these x1, 2, xn in our case? Because
+
+420
+01:04:04.400 --> 01:04:08.420
+we're looking at documents, these are elements of our vocabulary.
+
+421
+01:04:14.300 --> 01:04:19.320
+So they could be words, they could be key phrases.
+
+422
+01:04:23.560 --> 01:04:33.240
+And of course, Bernoulli, we understand in that they either occur or don't occur.  right so this is just a binary
+
+423
+01:04:34.220 --> 01:04:36.180
+variant  random variant
+
+424
+01:04:41.900 --> 01:04:49.960
+and so the model of generating a document  which is multivariate
+
+425
+01:04:49.960 --> 01:04:57.500
+is that we are saying that  a document you can think of a document consisting of
+
+426
+01:05:01.600 --> 01:05:12.580
+n slots one for every word or key phrase can you hear me hello my video seems to have got stuck
+
+427
+01:05:12.580 --> 01:05:14.300
+hello can you hear me
+
+428
+01:05:17.540 --> 01:05:22.800
+yes sir you're audible okay thank you so essentially we are saying this document
+
+429
+01:05:22.800 --> 01:05:32.380
+has n slots, one slot for every word or keyphrase.  And what we want to decide is, does this appear or not
+
+430
+01:05:32.380 --> 01:05:39.540
+appear in the column?  So this is the equivalent of our binary vectorization.
+
+431
+01:05:45.440 --> 01:05:47.800
+What are the parameters of this model?
+
+432
+01:05:51.260 --> 01:05:56.040
+For each element, we have a separate Barnaoli distribution.
+
+433
+01:05:57.480 --> 01:06:06.300
+The probability of x1 being a 1 is going to be some probability theta 1.
+
+434
+01:06:08.080 --> 01:06:15.620
+The probability of x2 equal to 1 is going to have a different probability.
+
+435
+01:06:18.640 --> 01:06:29.160
+right? And so what we are saying here is that for each one of these words,
+
+436
+01:06:29.620 --> 01:06:36.180
+we have its own parameter, theta n.
+
+437
+01:06:38.260 --> 01:06:46.860
+So there are n parameters here that we need to learn.  But why are we saying components?
+
+438
+01:06:50.100 --> 01:06:52.100
+think of components as topics.
+
+439
+01:06:58.620 --> 01:07:07.680
+Or actually, let's not even confuse it with topics right now.  Think of each of these as classes.  We are talking about
+
+440
+01:07:10.960 --> 01:07:15.180
+the corpus as a whole,  which is a set of documents.
+
+441
+01:07:18.780 --> 01:07:26.840
+being generated from a mixture model.  So whenever we are generating a document,
+
+442
+01:07:27.140 --> 01:07:35.520
+we first decide which component are we going to call,  which class are we going to generate a document call.  And depending on the class,
+
+443
+01:07:37.900 --> 01:07:47.800
+we will generate the words that appear.  And to generate the words that appear,  we need n parameters.
+
+444
+01:07:48.960 --> 01:07:57.980
+So the total number of parameters that we need here  is if we have k classes and we have n parameters for each class,
+
+445
+01:07:57.980 --> 01:08:06.620
+we have n times k parameters.  But each of the classes themselves
+
+446
+01:08:07.560 --> 01:08:13.240
+also have a probability of being asked to be generated.
+
+447
+01:08:14.460 --> 01:08:28.500
+And so we have the probability of C1 is equal to theta C1, probability of C2 is equal to theta C2
+
+448
+01:08:29.500 --> 01:08:39.940
+till the probability of Ck which is equal to 1 minus the sum of probability of Ck minus
+
+449
+01:08:40.920 --> 01:08:48.360
+cj minus 1 where j goes from 1 to k.
+
+450
+01:08:51.300 --> 01:09:01.720
+Actually, 1 minus sigma of theta cj where j goes from 1 to k minus 1.
+
+451
+01:09:03.260 --> 01:09:11.600
+So there are k minus 1 more parameters.  So the total number of parameters we would need is this.
+
+452
+01:09:14.980 --> 01:09:24.700
+So that is the multivariate Bernoulli model.  What about the multinomial distribution?  The multinomial distribution
+
+453
+01:09:29.960 --> 01:09:33.040
+is where we have a categorical variable.
+
+454
+01:09:35.620 --> 01:09:42.480
+and so what we are doing here is we are saying for every element of the vocabulary we call them v1
+
+455
+01:09:42.480 --> 01:09:55.860
+v2 till vm we have a probability of it being chosen as a word or key phrase in the document
+
+456
+01:09:56.720 --> 01:10:03.140
+So we have a document.  We now decide on a length of the document.
+
+457
+01:10:06.300 --> 01:10:13.740
+And so if we say the length is K,  let's not call it K because we've already,
+
+458
+01:10:14.940 --> 01:10:23.300
+let's call it capital N.  We have capital N slots that need to be filled.
+
+459
+01:10:26.520 --> 01:10:41.820
+Again, we choose the class to which the document belongs, and then we choose from the probability of words given the class that has been chosen.
+
+460
+01:10:43.800 --> 01:10:48.760
+And what is that? That is this categorical distribution.
+
+461
+01:10:53.980 --> 01:11:02.260
+and what we are saying now is we are choosing  from all of our vocabulary based on these probabilities
+
+462
+01:11:02.260 --> 01:11:09.960
+we are choosing words at random  and filling our slots with those words
+
+463
+01:11:13.880 --> 01:11:16.140
+so what are we going to end up with
+
+464
+01:11:16.140 --> 01:11:27.880
+we are going to have n selections from m possible values,
+
+465
+01:11:30.720 --> 01:11:34.260
+which are each of the elements of a vocab.
+
+466
+01:11:37.620 --> 01:11:41.420
+So what is the probability of a document going to be,
+
+467
+01:11:43.600 --> 01:11:51.900
+given that it has been generated from a particular class.  When we see a document,
+
+468
+01:11:54.540 --> 01:12:04.200
+it is of length n,  and there are m values here  from which we can choose these n.
+
+469
+01:12:04.920 --> 01:12:14.320
+What we are going to end up with  is essentially this here.
+
+470
+01:12:17.700 --> 01:12:26.720
+This capital N  is the number of trials  and these are
+
+471
+01:12:32.500 --> 01:12:38.900
+the occurrences.  the number of times each of our words are occurring.
+
+472
+01:12:39.080 --> 01:12:46.960
+So what we had said in terms of our notation here  is we have n trials.
+
+473
+01:12:48.660 --> 01:13:00.060
+We are going to say n divided by x1 factorial x2 factorial
+
+474
+01:13:00.060 --> 01:13:03.100
+till xm factorial.
+
+475
+01:13:04.300 --> 01:13:14.120
+where each of these x1, x2, and xm are the frequency with which each of these elements appear in our n
+
+476
+01:13:16.760 --> 01:13:28.040
+trials that we have. So this is the number of ways in which n slots can be filled with these frequency of
+
+477
+01:13:31.320 --> 01:13:40.100
+m vocabulary words and we then multiply by the probabilities right so p1 to the power of x1
+
+478
+01:13:40.100 --> 01:13:46.860
+times p2 to the power of x2 all the way till pm to the power of x3
+
+479
+01:13:48.900 --> 01:13:58.220
+where p1 to pm are these probabilities right so that's what we are representing  Okay.
+
+480
+01:14:05.900 --> 01:14:15.060
+So the multinomial distribution model of a document is different from a multivariate
+
+481
+01:14:15.060 --> 01:14:23.400
+Bernoulli model where we are saying that the words that appear in the document, they can
+
+482
+01:14:23.400 --> 01:14:31.800
+have a frequency associated with them. They fill up  N slots and therefore we have to choose the length of a document
+
+483
+01:14:31.800 --> 01:14:40.040
+also. But once  we've chosen the length of the document, we are  six
+
+484
+01:14:40.040 --> 01:14:44.540
+Selecting what to fill these documents by a probability distribution.
+
+485
+01:14:50.040 --> 01:14:55.940
+Okay, and that's the multinomial distribution model.
+
+486
+01:14:57.040 --> 01:15:07.000
+Now, given these two models, we end up with, if we want to do a classification model, we end up with
+
+487
+01:15:10.340 --> 01:15:13.660
+two versions of the naive Bayes algorithm.
+
+488
+01:15:21.340 --> 01:15:26.660
+Remember that the naive Bayes algorithm  made a simplifying assumption.
+
+489
+01:15:35.420 --> 01:15:44.500
+If we had n input variables and we had the class C and we wanted to know what's the probability
+
+490
+01:15:46.640 --> 01:15:57.320
+of a class given a set of input values, evidence E.
+
+491
+01:16:00.580 --> 01:16:15.220
+we can now represent it as the product of the probability of each xi given C
+
+492
+01:16:16.540 --> 01:16:26.800
+where i goes from 1 to n multiplied by the probability of C divided by the probability of
+
+493
+01:16:28.560 --> 01:16:33.820
+this is what we had done.  This was the naive Bayes model.
+
+494
+01:16:37.540 --> 01:16:47.520
+Now, why do we have two different versions  of the naive Bayes algorithm?  Depending on whether this is a binary vector
+
+495
+01:16:51.960 --> 01:16:55.100
+or whether this is a count vector.
+
+496
+01:16:56.800 --> 01:17:05.340
+A count vector is really required for the multinomium document model.
+
+497
+01:17:11.300 --> 01:17:12.000
+Why?
+
+498
+01:17:12.180 --> 01:17:21.340
+Because we need to know the number of times, NIT is the number of times the t-th element
+
+499
+01:17:22.920 --> 01:17:31.880
+of the vocabulary appears in the document dI.
+
+500
+01:17:35.140 --> 01:17:41.080
+And that is what is represented within the count vectorizer,  the number of times that word appears.
+
+501
+01:17:42.300 --> 01:17:51.500
+And that's why we need this count vector  when we want to calculate the probability of a document  given a class.
+
+502
+01:17:54.280 --> 01:18:04.300
+When we want to use instead the multivariate Bernoulli model,
+
+503
+01:18:07.240 --> 01:18:17.820
+this dit is either 1 or 0, where 1 is when wt appears in di.
+
+504
+01:18:17.820 --> 01:18:27.500
+and 0 when WT does not appear in DI.
+
+505
+01:18:32.840 --> 01:18:39.240
+Right?  And so whenever we are using the multivariate Bernoulli model,
+
+506
+01:18:45.640 --> 01:18:54.180
+the value here, how we calculate this, essentially changes.
+
+507
+01:18:55.980 --> 01:19:05.860
+Out here in the multivariate Bernoulli,  we can see we are taking the product over the vocabulary
+
+508
+01:19:06.700 --> 01:19:16.640
+and we are using the Bernoulli  distributions formula.
+
+509
+01:19:19.020 --> 01:19:27.780
+Right?  P of x to the,  P of theta  to the power of,
+
+510
+01:19:28.600 --> 01:19:38.000
+whatever I say here,  the P to the power of x times  1 minus p to the power of 1 minus x is the probability of this.
+
+511
+01:19:39.840 --> 01:19:43.440
+Or we can even write this as theta.  We're doing the same thing.
+
+512
+01:19:45.980 --> 01:19:52.640
+When we are wanting to use the multinomial distribution,
+
+513
+01:19:54.800 --> 01:20:00.540
+this has to be calculated differently.  And how is it calculated differently?
+
+514
+01:20:00.540 --> 01:20:05.100
+it's basically going to use this formula here,
+
+515
+01:20:08.200 --> 01:20:13.880
+which is what we have as the formula for the multinomial distribution,
+
+516
+01:20:13.880 --> 01:20:20.540
+but we are also multiplying by the probability of the length of the document.
+
+517
+01:20:24.180 --> 01:20:32.460
+And this probability of the length of the document,  we need to figure out what is the distribution going to be for this.
+
+518
+01:20:36.800 --> 01:20:42.020
+Right?  So that is what changes in the naive Bayes algorithm
+
+519
+01:20:43.240 --> 01:20:49.220
+depending on what kind of vectorizer we are using here.  When we use a binary vectorizer
+
+520
+01:20:51.460 --> 01:21:00.520
+it works pretty much the same way as the standard naive Bayes.  when we choose a count vectorizer, this part changes.
+
+521
+01:21:01.360 --> 01:21:07.340
+And we need to use instead this distribution,  which is the probability of bi given cj.
+
+522
+01:21:11.060 --> 01:21:17.800
+OK, I know this has got a little heavy.  I'm aware of that.  So let's leave it here for now.
+
+523
+01:21:17.960 --> 01:21:23.740
+And let me go to some code.
+
+524
+01:21:31.360 --> 01:21:40.400
+and I'll be sharing this in your EducoLab as well.  So here, there are going to be two
+
+525
+01:21:43.620 --> 01:21:51.960
+IPython notebooks that I share.  One is the text vectorizer, and the other is toxic comment classification.
+
+526
+01:21:53.740 --> 01:22:02.940
+here we are using in sklearn a standard data set which consists of news groups 20 news groups
+
+527
+01:22:04.200 --> 01:22:12.040
+so in the good old days people would have news groups where they would email into this news
+
+528
+01:22:12.040 --> 01:22:17.880
+group email address and then all of the messages associated with a particular
+
+529
+01:22:18.760 --> 01:22:28.140
+topic would get collated and would get shared with other people that were interested in that  topic. This was in the good old days when the internet was not as mature as it is today.
+
+530
+01:22:28.300 --> 01:22:35.560
+We didn't have social media and so on. So essentially this data set consists of a number
+
+531
+01:22:35.560 --> 01:22:44.100
+of messages and we can see that the structure of the data set, we have essentially a dictionary
+
+532
+01:22:45.140 --> 01:22:52.920
+and one of the elements in the dictionary is data  and that has as its value a list.
+
+533
+01:22:56.140 --> 01:23:01.900
+And in that list, you basically have a set of messages.  This is one message.
+
+534
+01:23:03.460 --> 01:23:13.200
+And in that message, you have who sent it,  what was the subject and where did they post it and so on.  And then it has some text.
+
+535
+01:23:14.980 --> 01:23:21.940
+So really what we want to do is we want to use this text.  We want to ignore these email addresses and all that kind of stuff.
+
+536
+01:23:22.100 --> 01:23:35.820
+We want to really use this text to be able to automatically classify it into whether it is about the Christian religion or whether it's about hockey or the Middle East or motorcycles.
+
+537
+01:23:35.820 --> 01:23:44.760
+So if you look at this, the labels, the class labels that we are hoping to use here are actually a taxonomy.
+
+538
+01:23:45.160 --> 01:23:50.360
+Now, what is a taxonomy?  A taxonomy is a tree structure.
+
+539
+01:24:02.320 --> 01:24:08.100
+so when yahoo was the main search engine for the internet
+
+540
+01:24:09.780 --> 01:24:15.620
+they had two ways in which you could navigate  and find content.
+
+541
+01:24:15.900 --> 01:24:25.260
+One was they provided or created a taxonomy  for the internet
+
+542
+01:24:26.560 --> 01:24:35.140
+where you had everything here.  I can't remember the exact word,  but this was basically the root node.
+
+543
+01:24:35.940 --> 01:24:39.000
+And then you had different
+
+544
+01:24:41.960 --> 01:24:51.260
+child nodes. Now in our case here, we have social, recreation,
+
+545
+01:24:53.960 --> 01:25:01.460
+as two of the child nodes that I can see here. Within social, we have further splits,
+
+546
+01:25:01.460 --> 01:25:09.360
+and I can see one of them is  religion  and then within religion we have  Christian
+
+547
+01:25:11.860 --> 01:25:21.660
+I presume we will also have other  notes here  like Islam  or maybe  Hindu
+
+548
+01:25:22.880 --> 01:25:30.340
+Sikh and so on  right  and here in recreation  we have sports
+
+549
+01:25:32.900 --> 01:25:41.360
+and within sports we have hockey.  And again, we would expect it to have cricket  and various other things too.
+
+550
+01:25:41.700 --> 01:25:51.060
+We also have talk, politics, right?  So out here, this would be talk,  this would be politics,
+
+551
+01:25:53.300 --> 01:25:55.100
+and then we have Middle East.
+
+552
+01:25:59.540 --> 01:26:07.420
+and again we would expect other subtopics as well right so the dot here this is just a way
+
+553
+01:26:07.420 --> 01:26:14.000
+of converting your taxonomy into a string where you use a dot as a separator to separate these
+
+554
+01:26:14.000 --> 01:26:21.200
+out and basically what yahoo did was they would have a bunch of documents hanging off
+
+555
+01:26:21.880 --> 01:26:28.120
+not just the leaf nodes, but you could also have documents hanging off here where they didn't know
+
+556
+01:26:28.120 --> 01:26:38.640
+quite exactly how to split it further into its subcategories. And so the idea here is that we
+
+557
+01:26:38.640 --> 01:26:47.120
+want to classify every one of these messages into a leaf node. And there are 20 such leaf nodes that
+
+558
+01:26:47.120 --> 01:26:55.860
+we have provided. And here they are, right? So alt.atheism, computer.graphics,
+
+559
+01:26:59.700 --> 01:27:07.840
+operating systems, and so on, right? So the first thing that we want to do here is get the data into
+
+560
+01:27:07.840 --> 01:27:14.440
+a shape that we are interested in. If we look at the data that we have been provided,
+
+561
+01:27:15.420 --> 01:27:24.760
+the data consists of five different keys.  They are dictionaries, and their keys are data, file names,
+
+562
+01:27:24.920 --> 01:27:34.100
+target names, target, and description.  We are only interested in actually the content and the target name.
+
+563
+01:27:34.680 --> 01:27:41.980
+The target is just a one-to-one mapping of a string  onto an integer from what I can take up.
+
+564
+01:27:41.980 --> 01:27:45.560
+right so we brought that in out here also we don't really
+
+565
+01:27:47.660 --> 01:27:55.820
+and so the first thing we do typically like we said is we will lemmatize the data we will
+
+566
+01:27:57.920 --> 01:28:06.920
+clean up some issues in the data like remove email addresses and stuff like this
+
+567
+01:28:06.920 --> 01:28:15.700
+remove new line characters, single quotes, right?  So punctuation.  So that's happening here.
+
+568
+01:28:16.780 --> 01:28:21.820
+And then out here is where the lemmatization is happening
+
+569
+01:28:23.360 --> 01:28:30.060
+using another library that you will now have to start to explore  called SPACY.
+
+570
+01:28:30.320 --> 01:28:40.200
+And SPACY is one of the leading natural language processing libraries  that is there. So getting familiarity with that is going to be important.
+
+571
+01:28:42.500 --> 01:28:46.400
+Now, when we lemmatize, the results of the lemmatization
+
+572
+01:28:47.160 --> 01:28:53.840
+depend on another piece of information, which are called POS tags.
+
+573
+01:28:56.100 --> 01:29:04.540
+Right? So these POS tags are assigned to individual words. POS stands for part of speech.
+
+574
+01:29:08.140 --> 01:29:12.200
+and so if we look up part of speech you will find
+
+575
+01:29:18.940 --> 01:29:27.040
+part of speech. Essentially you are assigning tags to every word
+
+576
+01:29:30.640 --> 01:29:38.720
+tags like nouns adjectives verb adverb right and knowing the post tag
+
+577
+01:29:38.720 --> 01:29:44.720
+Improves the quality of lemmatization that is done to it.
+
+578
+01:29:45.480 --> 01:29:54.160
+Right? Because you wouldn't want to lemmatize somebody's name, for example, even though it looks like a prime candidate for doing so.
+
+579
+01:29:55.200 --> 01:30:01.620
+So what we are doing here is we are loading a model, a pre-trained model in SPACEY.
+
+580
+01:30:04.400 --> 01:30:13.080
+If we look at this, EN stands for English.  So this is a model specifically for the English language.  And SM stands for small.
+
+581
+01:30:13.080 --> 01:30:19.280
+There is large models also, and medium-sized models  that you can pull up.
+
+582
+01:30:20.860 --> 01:30:29.100
+And typically, when we load this model,  this model has all sorts of processing capabilities.
+
+583
+01:30:29.100 --> 01:30:38.700
+and we are disabling named entity recognition  and entity parsing or sentence parsing in here.
+
+584
+01:30:39.020 --> 01:30:46.740
+All we are interested in doing at this point  is tokenization and post tags identification.
+
+585
+01:30:52.360 --> 01:30:55.460
+So when we run this,
+
+586
+01:30:57.940 --> 01:31:06.920
+what is happening here is we are getting our data from our data frame here and we are choosing
+
+587
+01:31:06.920 --> 01:31:14.740
+just the values in the content column we are converting it into a list we are removing emails
+
+588
+01:31:16.400 --> 01:31:22.140
+we are removing new line characters removing certain punctuation
+
+589
+01:31:23.860 --> 01:31:30.240
+we are loading this model the nlp model and we are
+
+590
+01:31:34.100 --> 01:31:42.240
+oh in fact before we load that nlp model we are executing on this here where we are removing
+
+591
+01:31:42.240 --> 01:31:53.760
+punctuation and converting each element in our list, which is one of these posts done to our
+
+592
+01:31:55.800 --> 01:32:00.820
+groups, and converting it into a list of words.
+
+593
+01:32:02.940 --> 01:32:09.840
+and we are then calling the lemmatization piece here
+
+594
+01:32:09.840 --> 01:32:14.200
+that is using the spacey model
+
+595
+01:32:14.200 --> 01:32:25.520
+and looking at only lemmatization of these cost types.
+
+596
+01:32:27.420 --> 01:32:31.100
+right so it's taking each token and it's lemmatizing it
+
+597
+01:32:32.440 --> 01:32:38.660
+and providing that in our texts out which is another list
+
+598
+01:32:40.960 --> 01:32:49.860
+which is being stored in data lemmatized and that is being returned so when we call our  get lemmatized clean data,
+
+599
+01:32:51.140 --> 01:32:55.580
+passing the data frame here,  what we end up getting back
+
+600
+01:32:55.580 --> 01:33:03.500
+is this list of words that appear within that message  that has been lemmatized,
+
+601
+01:33:05.140 --> 01:33:13.460
+punctuation's been removed,  but we can see we still have some issues here, right?  We have an apostrophe S out here.  So really we should be doing some further cleaning,
+
+602
+01:33:13.480 --> 01:33:17.060
+but this is the basic cleaning that we are doing here.
+
+603
+01:33:19.380 --> 01:33:27.560
+Now, at this point, I'm going to take the data lemmatized,  and that is really the training data that we have.
+
+604
+01:33:29.400 --> 01:33:35.760
+And I'm passing it through.  In sklearn, we have the feature extraction.textCountVectorizer.
+
+605
+01:33:39.520 --> 01:33:44.420
+And I'm saying I want to tokenize based on words.
+
+606
+01:33:45.620 --> 01:33:52.840
+I only want words in my vocabulary that have a minimum of 10 documents that they appear in
+
+607
+01:33:52.840 --> 01:34:01.260
+I want to use a list of stock words that is already embedded within this function this method
+
+608
+01:34:02.260 --> 01:34:08.980
+they're the English stock words that I want to remove I want to make all of my words lowercase
+
+609
+01:34:10.900 --> 01:34:15.820
+and I only want to have in my vocabulary words
+
+610
+01:34:15.820 --> 01:34:20.960
+that have greater than or equal to three characters within it.
+
+611
+01:34:24.940 --> 01:34:27.700
+And I do a fit transform on it,
+
+612
+01:34:29.060 --> 01:34:35.640
+and I end up with this fit transform creating a vocabulary
+
+613
+01:34:35.640 --> 01:34:42.180
+where it's matched every unique token, every word onto your unique ID.
+
+614
+01:34:43.740 --> 01:34:49.940
+And essentially what I'm seeing here is that the vector that we generate for every document,
+
+615
+01:34:51.240 --> 01:35:01.200
+the 7083rd element in that vector is going to be representing the word thing and the frequency within it
+
+616
+01:35:01.200 --> 01:35:02.500
+because I'm calling the count.
+
+617
+01:35:04.680 --> 01:35:12.200
+So that's all of my vocabulary here, of which we've seen we have a few thousand words.
+
+618
+01:35:15.260 --> 01:35:20.020
+We can see the vocabulary is actually 7,846.
+
+619
+01:35:21.200 --> 01:35:29.640
+Now, when I give you this IPython notebook, you can play around with some of the parameters,
+
+620
+01:35:29.640 --> 01:35:37.660
+reduce the minimum df, for example, from 10 to a lower value,  what that's going to do is increase the vocabulary.
+
+621
+01:35:38.300 --> 01:35:44.900
+If you change the token pattern to be not three characters minimum,
+
+622
+01:35:45.140 --> 01:35:49.840
+but two characters minimum, again, you're going to increase the size of the vocabulary.  Right.
+
+623
+01:35:49.840 --> 01:36:01.100
+And we can see that we have in our data vectors that have been returned 11,314 vectors.
+
+624
+01:36:01.800 --> 01:36:10.740
+And data vectorized is a sparse matrix.  Right?  So it's saying that this is a sparse matrix.
+
+625
+01:36:10.740 --> 01:36:17.360
+The dimensionality of that sparse matrix is 11,314 by 7,846.
+
+626
+01:36:17.360 --> 01:36:28.140
+So every row is a document and every word in our vocabulary is a column in here.
+
+627
+01:36:29.780 --> 01:36:44.900
+And it says that out of all of these elements, there are just 729489 elements that have a non-zero value in it.
+
+628
+01:36:47.360 --> 01:36:55.820
+So it's a sparse matrix.  Why are there so many zeros?  Because every document only contains a small subset of words
+
+629
+01:36:56.640 --> 01:37:04.000
+compared to the vocabulary size.  Imagine we are looking at a vocabulary size of only 7,800 words right now.
+
+630
+01:37:04.380 --> 01:37:11.140
+Imagine when that's a million words or two million words,  how sparse that matrix is going to be.  Right?
+
+631
+01:37:11.380 --> 01:37:16.520
+And this matrix is in what's called compressed sparse row format.
+
+632
+01:37:16.520 --> 01:37:27.400
+And what I would highly recommend is you look at scipy and the different formats in which sparse matrices are represented.
+
+633
+01:37:29.440 --> 01:37:38.220
+And why one representation is better than another, depending on what kind of operations you want to do on it.
+
+634
+01:37:39.340 --> 01:37:45.480
+So I realize we are out of time, so I'll stop here.  But we'll continue from here in the next lecture tomorrow.
+
+635
+01:37:47.040 --> 01:37:54.540
+and I'll share this so that you can go through it in your own time just after this lecture.  All right.  Thanks for staying there.
+
