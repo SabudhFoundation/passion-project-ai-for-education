@@ -18,11 +18,15 @@ class Make_Files:
     @classmethod
     def extract_test_case(cls, description):
         # Pattern to extract test cases
-        description = re.sub()
         test_case_pattern = r'--Test Cases Start--\s*.*\s*(def.*?)\s*`{0,3}\s*--Test Cases End--'
+        test_case_pattern_2 = r'```python\n(.*?)```' 
+
         # Extract test cases
-        test_cases_match = re.search(test_case_pattern, description, re.DOTALL)
+        test_cases_match = re.search(test_case_pattern_2, description, re.DOTALL)
         test_cases = test_cases_match.group(1).strip() if test_cases_match else "Test Cases not found"
+        if test_cases == "Test Cases not found":
+            test_cases_match = re.search(test_case_pattern, description, re.DOTALL)
+            test_cases = test_cases_match.group(1).strip() if test_cases_match else "Test Cases not found"
 
         # Extract everything else (constraints)
         constrains = re.sub(test_case_pattern, '', description, flags=re.DOTALL).strip()

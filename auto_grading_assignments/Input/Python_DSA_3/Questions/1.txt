@@ -1,0 +1,11 @@
+------------------------DESCRIPTION----------------
+Question: `Write a function to merge two linked lists.`
+
+
+
+--Constraints Start--
+- The Function should be named 'solution'.
+- The Function should take two parameters, both of which are the heads of linked lists (ListNode).
+- The Function should output the head of the merged linked list (ListNode).
+- The output linked list should be sorted in ascending order.
+--Constraints End--

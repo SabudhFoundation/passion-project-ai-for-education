@@ -1,7 +1,6 @@
 from azure.ai.inference import ChatCompletionsClient
 from azure.ai.inference.models import SystemMessage, UserMessage
 from azure.core.credentials import AzureKeyCredential
-import re
 
 class ASK_GPT4:
     def __init__(self, secret_key, endpoint, model_name):
@@ -22,6 +21,7 @@ class ASK_GPT4:
                             Question: `{question}`
                             
                             --Test Cases Start--
+                            ```python
                             def test_solution(solution):
                                 passed = []
                                 not_passed = []
@@ -35,6 +35,7 @@ class ASK_GPT4:
                                 else:
                                     not_passed.append("Soltuion has not passed test case with inputs" + test_case_inputs + " result", expected_result)
                                 return passed, not_passed
+                            ```
                             --Test Cases End--
                             
                             Also give me some Contrains that should apply to the solution made so that I can run the test cases you provided correctly like:
@@ -44,7 +45,10 @@ class ASK_GPT4:
                             - The Function should ouput in such a way \n#Output Layout here#
                             --Constrains End--
                             IMPORTANT: The test cases should test the functionality of all the concepts that are related to topic of the question
-                            I am keeping these cases in a seperate python file hence make sure you also implement the Data Structure Classes WITHIN THE test_solution FUNCTION neccessary for running these test cases """),
+                            Make sure you also implement the Data Structure Classes WITHIN THE test_solution neccessary for running these test cases like when we use Data Structure in a solution, you should have Class of that Data Structure ready WITHIN the test_solution FUNCTION
+                            Make sure you mention that information that should be known to to the student for successing running of test case in constraints, like attribute names of Data ructure Class.                      
+                            At Last the test_solution function should output a tuple of 2 lists `return passed, not_passed` in that order.
+                            DO NOT GIVE ME THE SOLUTION TO THIS PROBLEM"""),
             ],
             temperature=0.1,
             max_tokens=2000,

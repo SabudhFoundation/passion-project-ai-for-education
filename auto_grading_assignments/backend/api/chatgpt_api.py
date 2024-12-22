@@ -1,6 +1,5 @@
 from openai import OpenAI
 import logging
-import re
 
 class HomeworkGrader:
     def __init__(self, token, endpoint, model_name, output_limit):

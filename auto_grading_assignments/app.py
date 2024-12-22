@@ -9,6 +9,7 @@ from wtforms.validators import DataRequired, Email
 from werkzeug.utils import secure_filename
 from database.DataBase import Connect_DB
 import add_assignment
+import re
 
 # Configure logging
 logging.basicConfig(filename='teachers.log',level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -162,7 +163,7 @@ def edit_test_cases(assignment_name):
             app_logger.info("No existing test cases found. Initializing new test cases for assignment '%s'.", assignment_name)
 
         try:
-            new_test_cases = {key.split('_')[2]: value for key, value in request.form.items() if key.startswith('test_case_')}
+            new_test_cases = {key.split('_')[2]: re.sub(r'\r\n', r'\n',value) for key, value in request.form.items() if key.startswith('test_case_')}
             app_logger.debug("New test cases to update: %s", new_test_cases)
 
             test_cases.update(new_test_cases)

@@ -6,12 +6,11 @@ from database.DataBase import Connect_DB
 import pathlib
 import sys
 import json, os, logging
-import re
 
 
 # Create a logger for grading
 add_assignment_logger = logging.getLogger('add_assignment_logger')
-add_assignment_handler = logging.FileHandler('teachers_view.log')
+add_assignment_handler = logging.FileHandler('Logs/teachers_view.log')
 add_assignment_handler.setLevel(logging.INFO)
 add_assignment_formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
 add_assignment_handler.setFormatter(add_assignment_formatter)
@@ -23,7 +22,6 @@ def generate_description(test_case_maker, question, subject):
     return test_case_maker.get_test_cases(question, subject)
 
 def write_description(description, dir, file_name, write_json=True):
-    description = re.sub(r'\r\n', r'\n', description)
     Make_Files.make_question(description=description, directory=dir, file_name=file_name)
 
     if not write_json:

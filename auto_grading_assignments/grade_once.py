@@ -6,7 +6,7 @@ from backend.api.chatgpt_api import HomeworkGrader
 from database.DataBase import Connect_DB
 from backend.api.mail import send_feedback, extract_marks_and_feedback
 from backend.directory.getinput import GetInputs
-from backend.directory.run_test_cases import dynamic_import_and_test
+from backend.directory.run_test_cases import concatenate_and_run_tests
 
 from backend.logger_config import setup_logger
 
@@ -99,11 +99,14 @@ def grade_once(student_email, assignment_folder):
         feedback = f'\nFEEDBACK FOR QUESTION:\n{question}\n'
         
         try:
-            test_score, not_passed = dynamic_import_and_test(solution_file=question_id, intern_id=student_id, assignment=assignment_folder, test_case_folder='Test Cases')
+            test_score, not_passed = concatenate_and_run_tests(solution_file=question_id, intern_id=student_id, assignment=assignment_folder, test_case_folder='Test Cases')
+            print(test_score, not_passed)
             if not_passed:
+                solution += f'\n\n Test Score:{test_score}\n\n'
                 for tc in not_passed:
-                    solution += '\n'
                     solution += tc
+            else:
+                solution += f"\n\nALL TEST CASES PASSED FOR THE GIVEN QUESTION\n\n TEST SCORE: {test_score}\n\n"
 
             feedback += f"ANSWER:\n\n{solution}"
             response = autograder.grade_answer(question, solution, question_score)

@@ -1,9 +1,9 @@
-import os, re
+import os
 import pathlib
 import logging
 
 # Configure logging
-logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s', filename='grading.log')
+logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s', filename=os.path.join('Logs','getinput.log'))
 
 
 class GetInputs:

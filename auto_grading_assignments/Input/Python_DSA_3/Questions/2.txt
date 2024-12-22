@@ -1,0 +1,13 @@
+------------------------DESCRIPTION----------------
+Question: `Write a function to reverse a linked list.`
+
+
+
+--Constraints Start--
+- The Function should be named 'solution'.
+- The Function should take a single parameter, which is the head of the linked list (of type ListNode).
+- The Function should output the head of the reversed linked list (of type ListNode).
+- The ListNode class should have the following attributes:
+  - `value`: to store the value of the node.
+  - `next`: to store the reference to the next node in the linked list.
+--Constraints End--

@@ -1,53 +1,95 @@
-import importlib, re
+import os
+import sys, logging
+import importlib.util
 from backend.logger_config import setup_logger
 
-# Create a logger for grading
-grading_logger = setup_logger()
 
-def dynamic_import_and_test(solution_file, intern_id, assignment, test_case_folder):
-    # Construct module paths
-    solution_module_name = f"Input.{assignment}.{intern_id}.{solution_file}"
-    test_case_module_name = f"Input.{assignment}.{test_case_folder}.{solution_file}"
-
-    grading_logger.info(f"\n-------------------------run_test_cases.py-------------\nRunning Test Cases For\nAssignment: {assignment}\nIntern: {intern_id}")
+def concatenate_and_run_tests(solution_file, intern_id, assignment, test_case_folder):
+    testcase_logger = setup_logger("testcase")
     try:
-        # Dynamically import solution and test_case modules
-        solution_module = importlib.import_module(solution_module_name)
-        test_case_module = importlib.import_module(test_case_module_name)
-       
-        # Get the solution function and test_solution function
-        solution_function = getattr(solution_module, 'solution', None)
-        test_solution = getattr(test_case_module, 'test_solution', None)
+        if isinstance(intern_id, int):
+            intern_id = f"{intern_id}"
+        if isinstance(solution_file, int) or not solution_file.endswith(".py"):
+            solution_file = f"{solution_file}.py"
+        # Construct full paths
+        base_path = os.path.join('Input', assignment, intern_id)
+        test_case_path = os.path.join('Input', assignment, test_case_folder)
         
+        # Full file paths
+        solution_file_path = os.path.join(base_path, solution_file)
+        test_case_file_path = os.path.join(test_case_path, solution_file)
+        
+        # Log start of testing
+        testcase_logger.info(f"\n-------------------------run_test_cases.py-------------\n"
+                             f"Running Test Cases For\n"
+                             f"Assignment: {assignment}\n"
+                             f"Intern: {intern_id}\n"
+                             f"Solution: {solution_file}")
+        
+        # Read solution and test case files
+        with open(solution_file_path, 'r') as sol_file:
+            solution_code = sol_file.read()
+        
+        with open(test_case_file_path, 'r') as test_file:
+            test_code = test_file.read()
+        
+        # Concatenate the files
+        combined_code = solution_code + '\n' + test_code
+        
+        # Create a temporary file with combined code
+        temp_file_path = os.path.join(base_path, f'temp_{solution_file}')
+        with open(temp_file_path, 'w') as temp_file:
+            temp_file.write(combined_code)
+        
+        # Dynamically execute the combined file
+        spec = importlib.util.spec_from_file_location("combined_module", temp_file_path)
+        module = importlib.util.module_from_spec(spec)
+        sys.path.insert(0, base_path)
+        spec.loader.exec_module(module)
+        
+        # Get the solution and test_solution functions
+        solution_function = getattr(module, 'solution', None)
+        test_solution = getattr(module, 'test_solution', None)
+        
+        # Validate functions
         if not callable(solution_function):
-            grading_logger.error(f"'solution' function not found in {solution_module_name}")
-        if not callable(test_solution):
-            grading_logger.error(f"'test_solution' function not found in {test_case_module_name}")
+            testcase_logger.error(f"'solution' function not found in {solution_file}")
+            print(f"'solution' function not found in {solution_file}")
+            return 0, []
         
+        if not callable(test_solution):
+            testcase_logger.error(f"'test_solution' function not found in {solution_file}")
+            print(f"'test_solution' function not found in {solution_file}")
+            return 0, []
+        
+        print("both found")
+
         # Run the tests
         passed, not_passed = test_solution(solution_function)
-
-        if len(passed) + len(not_passed) == 0:
-            grading_logger.error(f"No Test Cases were Run!")
-        else:
-            grading_logger.info(f"Test Cases Passed {len(passed)}, Out of {len(not_passed) + len(passed)}")
-
-        score = (len(passed) / (len(passed) + len(not_passed))) * 100
         
-    except ModuleNotFoundError as e:
-        grading_logger.error(f"Error: Module not found - {e}")
-        return 0, []
-    except AttributeError as e:
-        grading_logger.error(f"Error: {e}")
-        return 0, []
-    except ValueError as e:
-        grading_logger.error(f"Error: {e}")
+        if len(passed) + len(not_passed) == 0:
+            testcase_logger.error("No Test Cases were Run!")
+            print("No Test Cases were Run!")
+            return 0, []
+        
+        # Calculate score
+        score = (len(passed) / (len(passed) + len(not_passed))) * 100
+        testcase_logger.info(f"Test Cases Passed {len(passed)}, Out of {len(not_passed) + len(passed)}")
+        print(f"Test Cases Passed {len(passed)}, Out of {len(not_passed) + len(passed)}")
+        
+        # Clean up temporary file
+        os.remove(temp_file_path)
+        
+        return score, not_passed
+    
+    except FileNotFoundError as e:
+        testcase_logger.error(f"Error: File not found - {e}")
+        print(f"Error: File not found - {e}")
         return 0, []
     except Exception as e:
-        grading_logger.error(f"Unexpected error: {e}")
+        testcase_logger.error(f"Unexpected error: {e}")
+        print(f"Unexpected error: {e}")
         return 0, []
-   
-    return score, not_passed
 
 if __name__ == '__main__':
-    dynamic_import_and_test(1, 1, 'AssignmentID', 'Test Cases')
+    concatenate_and_run_tests('1.py', '3', 'Python_DSA_2', 'Test Cases')
